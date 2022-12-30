@@ -969,7 +969,9 @@ class K2ViewItemlist extends K2View
 
                     // Set meta description
                     $metaDesc = $document->getMetadata('description');
-
+					$metaDesc = preg_replace("#{(.*?)}(.*?){/(.*?)}#s", '', $tag->tag_desc);
+                    $metaDesc = filter_var($metaDesc, FILTER_SANITIZE_STRING);
+					
                     if ($menuItemMatch && K2_JVERSION != '15') {
                         if ($params->get('menu-meta_description')) {
                             $metaDesc = $params->get('menu-meta_description');
@@ -1001,7 +1003,7 @@ class K2ViewItemlist extends K2View
                     }
 
                     $document->setMetadata('robots', $metaRobots);
-		    $metaDesc = $tag->tag_desc;		
+		    //$metaDesc = $tag->tag_desc;		
                     // Set Facebook meta tags
                     if ($params->get('facebookMetatags', 1)) {
                         $document->setMetaData('og:url', $currentAbsoluteUrl);
