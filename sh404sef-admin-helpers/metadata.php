@@ -6,8 +6,8 @@
  * @copyright    (c) Yannick Gaultier - Weeblr llc - 2022
  * @package      sh404SEF
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @version      4.24.6.4348
- * @date        2022-11-17
+ * @version      4.24.0.4301
+ * @date        2022-01-12
  */
 
 // Security check to ensure this file is being included by a parent file.
@@ -211,6 +211,15 @@ class Sh404sefHelperMetadata
 			$t                         = self::cleanUpDesc($rawMetaData->metadesc);
 			$metaData->pageDescription = ShlSystem_Strings::pr('#\$([0-9]*)#u', '\\\$${1}', $t);
 		}
+        if($_REQUEST['tag'] !='')
+        {
+            $db=JFactory::getDBO();
+            $X="SELECT tag_desc FROM #__k2_tags WHERE name=".$db->quote($_REQUEST['tag']);
+            $db->setQuery($X);
+            $Desc=$db->loadResult();
+            //echo $Desc;exit;
+        }
+        $metaData->pageDescription = str_replace('&nbsp;','',strip_tags($Desc));
 
 		if (!empty($rawMetaData->metakey))
 		{
@@ -290,8 +299,8 @@ class Sh404sefHelperMetadata
 	private static function buildDescription($content)
 	{
 		$expressions = array(
-			'/<style[^>]*>.*<\/style>/uUis',
-			'/<script[^>]*>.*<\/script>/uUis',
+			'/<style\s[^>]*>.*<\/style>/uUis',
+			'/<script\s[^>]*>.*<\/script>/uUis',
 			'#{\s*jumi[^}]+}#uUi',
 			'#{\s*wbamp[^}]+}#uUi',
 			'#{\s*sh404sef_[^}]*}#us',

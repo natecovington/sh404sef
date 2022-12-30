@@ -6,8 +6,8 @@
  * @copyright   (c) Yannick Gaultier - Weeblr llc - 2022
  * @package     sh404SEF
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @version     4.24.6.4348
- * @date        2022-11-17
+ * @version     4.24.0.4301
+ * @date        2022-01-12
  */
 
 // Security check to ensure this file is being included by a parent file.
@@ -106,21 +106,20 @@ class Sh404sefHelperOgp
 		$displayData['page_title'] = empty($pageInfo->pageTitle) ? $document->getTitle() : $pageInfo->pageTitle;
 
 		// insert description
-		if (
-			(
-				$config->ogEnableDescription
-				&&
-				$customData->og_enable_description == SH404SEF_OPTION_VALUE_USE_DEFAULT
-			)
-			||
-			$customData->og_enable_description == SH404SEF_OPTION_VALUE_YES
-		)
+		if(($config->ogEnableDescription && $customData->og_enable_description == SH404SEF_OPTION_VALUE_USE_DEFAULT) || $customData->og_enable_description == SH404SEF_OPTION_VALUE_YES)
 		{
-			$description                = empty($customData->og_custom_description) ?
-				$pageInfo->pageDescription
-				:
-				$customData->og_custom_description;
-			$displayData['description'] = empty($description) ? $document->getDescription() : $description;
+            $description                = empty($customData->og_custom_description) ?
+            $pageInfo->pageDescription:$customData->og_custom_description;
+            $displayData['description'] = empty($description) ? $document->getDescription() : $description;
+            if($_REQUEST['tag'] !='')
+            {
+                $db=JFactory::getDBO();
+                $X="SELECT tag_desc FROM #__k2_tags WHERE name=".$db->quote($_REQUEST['tag']);
+                $db->setQuery($X);
+                $Desc=$db->loadResult();
+                //echo $Desc;exit;
+            }
+            $displayData['description'] = str_replace('&nbsp;','',strip_tags($Desc));
 		}
 
 		// insert type

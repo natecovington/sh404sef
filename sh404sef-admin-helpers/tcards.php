@@ -6,8 +6,8 @@
  * @copyright   (c) Yannick Gaultier - Weeblr llc - 2022
  * @package     sh404SEF
  * @license     http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * @version     4.24.6.4348
- * @date        2022-11-17
+ * @version     4.24.0.4301
+ * @date        2022-01-12
  */
 
 // Security check to ensure this file is being included by a parent file.
@@ -71,6 +71,15 @@ class Sh404sefHelperTcards
 		// meaning not even a sitewide one, we use the page title, which would always exists
 		$displayData['description'] = empty($pageInfo->pageDescription) ? $document->getDescription() : $pageInfo->pageDescription;
 		$displayData['description'] = empty($displayData['description']) ? $displayData['title'] : $displayData['description'];
+        if($_REQUEST['tag'] !='')
+        {
+            $db=JFactory::getDBO();
+            $X="SELECT tag_desc FROM #__k2_tags WHERE name=".$db->quote($_REQUEST['tag']);
+            $db->setQuery($X);
+            $Desc=$db->loadResult();
+            //echo $Desc;exit;
+        }
+        $displayData['description'] = str_replace('&nbsp;','',strip_tags($Desc));
 
 		// insert url. If any, we insert the canonical url rather than current, to consolidate
 		$displayData['url'] = empty($pageInfo->pageCanonicalUrl) ? $pageInfo->currentSefUrl : $pageInfo->pageCanonicalUrl;
